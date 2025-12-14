@@ -1,10 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      synchronize: false, // Disable auto-sync in production
+      logging: true, // Enable SQL logging
+      entities: [__dirname + '/**/*.entity{.ts,.js}'], // Auto-load entities
+    }),
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
